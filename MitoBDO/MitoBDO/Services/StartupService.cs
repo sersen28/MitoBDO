@@ -2,6 +2,7 @@
 using Discord.WebSocket;
 using Discord;
 using System.Reflection;
+using System.Configuration;
 
 namespace MitoBDO.Services
 {
@@ -24,9 +25,9 @@ namespace MitoBDO.Services
 		public async Task StartAsync()
 		{
 #if DEBUG
-			await _discord.LoginAsync(TokenType.Bot, "MTA3ODEyOTIyNzkwNTM4ODU2NA.GNfziY.TWQBsL8-l-JWq8XXewYPI9-9RAw0SxWXZ_Dj3Y");
+			await _discord.LoginAsync(TokenType.Bot, ConfigurationManager.AppSettings["UranoMito"]);
 #else
-			await _discord.LoginAsync(TokenType.Bot, "MTA3ODEyODQ0MDQ2Njc1MTYwOQ.GHZ3dD.YnxtBPC5orKbK5PAysJG7OLCn-wtIEENAJ6v4U");
+			await _discord.LoginAsync(TokenType.Bot, ConfigurationManager.AppSettings["TsukinoMito"]);
 #endif
 			await _discord.StartAsync();
 			await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _provider);
