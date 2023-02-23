@@ -8,8 +8,14 @@ namespace MitoBDO
 {
 	public class MitoBot
 	{
+		private string UranoMito;
+
 		public MitoBot(string[] args)
 		{
+			if (args is not null && args.Length > 0)
+			{
+				UranoMito = args[0];
+			}
 		}
 
 		public static async Task RunAsync(string[] args)
@@ -27,7 +33,7 @@ namespace MitoBDO
 			provider.GetRequiredService<LoggingService>();
 			provider.GetRequiredService<CommandHandler>();
 
-			await provider.GetRequiredService<StartupService>().StartAsync();
+			await provider.GetRequiredService<StartupService>().StartAsync(UranoMito);
 			await Task.Delay(-1);
 		}
 
