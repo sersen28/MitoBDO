@@ -22,12 +22,12 @@ namespace MitoBDO.Services
 			_commands = commands;
 		}
 
-		public async Task StartAsync(string UranoMito)
+		public async Task StartAsync(string TsukinoMito)
 		{
 #if DEBUG
-			await _discord.LoginAsync(TokenType.Bot, UranoMito);
+			await _discord.LoginAsync(TokenType.Bot, ConfigurationManager.AppSettings["UranoMito"]);
 #else
-			await _discord.LoginAsync(TokenType.Bot, ConfigurationManager.AppSettings["TsukinoMito"]);
+			await _discord.LoginAsync(TokenType.Bot, TsukinoMito);
 #endif
 			await _discord.StartAsync();
 			await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _provider);
