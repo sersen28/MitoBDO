@@ -52,6 +52,7 @@ namespace MitoBDO
 			.AddSingleton<CommandHandler>()
 			.AddSingleton<StartupService>()
 			.AddSingleton<LoggingService>()
+			.AddSingleton<TimeService>()
 			.AddSingleton<ButtonEventHandler>();
 		}
 	}
