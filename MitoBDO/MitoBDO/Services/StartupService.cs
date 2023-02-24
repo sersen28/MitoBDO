@@ -3,6 +3,7 @@ using Discord.WebSocket;
 using Discord;
 using System.Reflection;
 using System.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace MitoBDO.Services
 {
@@ -30,6 +31,7 @@ namespace MitoBDO.Services
 			await _discord.LoginAsync(TokenType.Bot, TsukinoMito);
 #endif
 			await _discord.StartAsync();
+			_discord.ButtonExecuted += _provider.GetService<ButtonEventHandler>().ButtonHandler;
 			await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _provider);
 		}
 	}

@@ -32,6 +32,7 @@ namespace MitoBDO
 			var provider = services.BuildServiceProvider();
 			provider.GetRequiredService<LoggingService>();
 			provider.GetRequiredService<CommandHandler>();
+			provider.GetRequiredService<ButtonEventHandler>();
 
 			await provider.GetRequiredService<StartupService>().StartAsync(BotKey);
 			await Task.Delay(-1);
@@ -51,7 +52,7 @@ namespace MitoBDO
 			.AddSingleton<CommandHandler>()
 			.AddSingleton<StartupService>()
 			.AddSingleton<LoggingService>()
-			.AddSingleton<Random>();
+			.AddSingleton<ButtonEventHandler>();
 		}
 	}
 }
