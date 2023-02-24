@@ -5,6 +5,8 @@ namespace MitoBDO.Services
 {
 	public static class GuildRoleService
 	{
+		private const int WaitMilliseconds = 1500;
+
 		public static async Task AddRole(SocketMessageComponent component, string roleName)
 		{
 			var user = component.User as SocketGuildUser;
@@ -20,7 +22,7 @@ namespace MitoBDO.Services
 			{
 				await component.RespondAsync($"{component.User.Mention} 역할을 찾을 수 없습니다.\n관리자에게 문의하세요.");
 			}
-			await Task.Delay(10000);
+			await Task.Delay(WaitMilliseconds);
 			await component.DeleteOriginalResponseAsync();
 		}
 
@@ -39,7 +41,7 @@ namespace MitoBDO.Services
 			{
 				await component.RespondAsync($"{component.User.Mention} 역할을 찾을 수 없습니다.\n관리자에게 문의하세요.");
 			}
-			await Task.Delay(10000);
+			await Task.Delay(WaitMilliseconds);
 			await component.DeleteOriginalResponseAsync();
 		}
 	}

@@ -28,7 +28,7 @@ namespace MitoBDO.Services
 #if DEBUG
 			await _discord.LoginAsync(TokenType.Bot, ConfigurationManager.AppSettings["UranoMito"]);
 #else
-			await _discord.LoginAsync(TokenType.Bot, Environment.GetEnvironmentVariable("TsukinoMito"));
+			await _discord.LoginAsync(TokenType.Bot, ConfigurationManager.AppSettings["TsukinoMito"]);
 #endif
 			await _discord.StartAsync();
 			_discord.ButtonExecuted += _provider.GetService<ButtonEventHandler>().ButtonHandler;
