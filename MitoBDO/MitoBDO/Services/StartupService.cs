@@ -31,8 +31,9 @@ namespace MitoBDO.Services
 			await _discord.LoginAsync(TokenType.Bot, ConfigurationManager.AppSettings["TsukinoMito"]);
 #endif
 			await _discord.StartAsync();
-			_discord.ButtonExecuted += _provider.GetService<ButtonEventHandler>().ButtonHandler;
 			await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _provider);
+			_discord.ButtonExecuted += _provider.GetService<DiscordEventHandler>().ButtonHandler;
+			_discord.SelectMenuExecuted += _provider.GetService<DiscordEventHandler>().MenuHandler;
 		}
 	}
 }

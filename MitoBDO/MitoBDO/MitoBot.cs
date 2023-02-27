@@ -3,6 +3,7 @@ using Discord.WebSocket;
 using Discord;
 using Microsoft.Extensions.DependencyInjection;
 using MitoBDO.Services;
+using Discord.Interactions;
 
 namespace MitoBDO
 {
@@ -32,7 +33,8 @@ namespace MitoBDO
 			var provider = services.BuildServiceProvider();
 			provider.GetRequiredService<LoggingService>();
 			provider.GetRequiredService<CommandHandler>();
-			provider.GetRequiredService<ButtonEventHandler>();
+			provider.GetRequiredService<PartyService>();
+			provider.GetRequiredService<DiscordEventHandler>();
 
 			await provider.GetRequiredService<StartupService>().StartAsync(BotKey);
 			await Task.Delay(-1);
@@ -49,11 +51,13 @@ namespace MitoBDO
 			{
 				LogLevel = LogSeverity.Verbose,
 			}))
+			.AddSingleton<GuildRoleService>()
 			.AddSingleton<CommandHandler>()
 			.AddSingleton<StartupService>()
 			.AddSingleton<LoggingService>()
 			.AddSingleton<TimeService>()
-			.AddSingleton<ButtonEventHandler>();
+			.AddSingleton<PartyService>()
+			.AddSingleton<DiscordEventHandler>();
 		}
 	}
 }

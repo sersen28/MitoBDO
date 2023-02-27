@@ -3,11 +3,11 @@ using Discord.WebSocket;
 
 namespace MitoBDO.Services
 {
-	public static class GuildRoleService
+	public class GuildRoleService
 	{
 		private const int WaitMilliseconds = 1500;
 
-		public static async Task AddRole(SocketMessageComponent component, string roleName)
+		public async Task AddRole(SocketMessageComponent component, string roleName)
 		{
 			var user = component.User as SocketGuildUser;
 			var channel = component.Channel as SocketGuildChannel;
@@ -26,7 +26,7 @@ namespace MitoBDO.Services
 			await component.DeleteOriginalResponseAsync();
 		}
 
-		public static async Task RemoveRole(SocketMessageComponent component, string roleName)
+		public async Task RemoveRole(SocketMessageComponent component, string roleName)
 		{
 			var user = component.User as SocketGuildUser;
 			var channel = component.Channel as SocketGuildChannel;
