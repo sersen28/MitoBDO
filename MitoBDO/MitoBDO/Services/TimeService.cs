@@ -1,5 +1,6 @@
 ﻿using Discord.Commands;
 using Discord.WebSocket;
+using System.Threading;
 using System.Timers;
 using Timer = System.Timers.Timer;
 
@@ -14,7 +15,7 @@ namespace MitoBDO.Services
 
 		private Timer timer;
 		private double interval = 60000;
-		private ulong channelID = 1078553582359543849;
+		private ulong channelID = 1036557769353986058;
 
 		public TimeService(DiscordSocketClient discord)
 		{
@@ -35,14 +36,12 @@ namespace MitoBDO.Services
 		private void TimeCheck(object sender, ElapsedEventArgs e)
 		{
 			var now = DateTime.Now;
-			Console.WriteLine(DateTime.Now.ToString());
 			var channel = discord.GetChannel(channelID) as SocketTextChannel;
 			if (channel is null) return;
 
-			if (now.Hour is 7)
+			if (now.Hour is 7 && now.Minute is 0)
 			{
 				ResetTimeService();
-				channel.SendMessageAsync("테스트 메시지입니다. 오전 7시가 되어 월드보스 설정 사항을 초기화합니다.");
 				return;
 			}
 
@@ -52,15 +51,15 @@ namespace MitoBDO.Services
 			}
 			else if (now.DayOfWeek is DayOfWeek.Thursday)
 			{
-				if (now.Hour is 23 & now.Minute is 12) AssembleAnnounce(now, channel, "가모스");
+				if (now.Hour is 23 & now.Minute is 10) AssembleAnnounce(now, channel, "가모스");
 			}
 			else if (now.DayOfWeek is DayOfWeek.Saturday)
 			{
-				if (now.Hour is 23 & now.Minute is 42) AssembleAnnounce(now, channel, "가모스");
+				if (now.Hour is 23 & now.Minute is 40) AssembleAnnounce(now, channel, "가모스");
 			}
 			else if (now.DayOfWeek is DayOfWeek.Sunday)
 			{
-				if (now.Hour is 16 & now.Minute is 20) VellAnnounce(now, channel);
+				if (now.Hour is 16 & now.Minute is 15) VellAnnounce(now, channel);
 			}
 		}
 
