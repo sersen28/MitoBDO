@@ -4,6 +4,7 @@ using Discord;
 using Microsoft.Extensions.DependencyInjection;
 using MitoBDO.Services;
 using Discord.Interactions;
+using MitoBDO.Module;
 
 namespace MitoBDO
 {
@@ -33,7 +34,6 @@ namespace MitoBDO
 			var provider = services.BuildServiceProvider();
 			provider.GetRequiredService<LoggingService>();
 			provider.GetRequiredService<CommandHandler>();
-			provider.GetRequiredService<PartyService>();
 			provider.GetRequiredService<DiscordEventHandler>();
 
 			await provider.GetRequiredService<StartupService>().StartAsync(BotKey);
@@ -51,12 +51,12 @@ namespace MitoBDO
 			{
 				LogLevel = LogSeverity.Verbose,
 			}))
-			.AddSingleton<GuildRoleService>()
+			.AddSingleton<GuildService>()
 			.AddSingleton<CommandHandler>()
 			.AddSingleton<StartupService>()
 			.AddSingleton<LoggingService>()
 			.AddSingleton<TimeService>()
-			.AddSingleton<PartyService>()
+			.AddSingleton<PartyModule>()
 			.AddSingleton<DiscordEventHandler>();
 		}
 	}

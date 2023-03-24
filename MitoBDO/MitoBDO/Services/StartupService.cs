@@ -32,8 +32,14 @@ namespace MitoBDO.Services
 #endif
 			await _discord.StartAsync();
 			await _commands.AddModulesAsync(Assembly.GetEntryAssembly(), _provider);
-			_discord.ButtonExecuted += _provider.GetService<DiscordEventHandler>().ButtonHandler;
-			_discord.SelectMenuExecuted += _provider.GetService<DiscordEventHandler>().MenuHandler;
+
+			var eventHandler = _provider.GetService<DiscordEventHandler>();
+			if (eventHandler is not null)
+			{
+				_discord.ButtonExecuted += eventHandler.ButtonHandler;
+				_discord.SelectMenuExecuted += eventHandler.MenuHandler;
+				_discord.ModalSubmitted += eventHandler.ModalHandler;
+			}
 		}
 	}
 }

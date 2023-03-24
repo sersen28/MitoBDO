@@ -9,6 +9,7 @@ namespace MitoBDO.Services
 	public class TimeService : ModuleBase
 	{
 		private readonly DiscordSocketClient discord;
+		private const string OfficialChannel = "에페리아 3";
 
 		public static bool GarmothAssembly = true;
 		public static bool VellAssembly = true;
@@ -45,7 +46,11 @@ namespace MitoBDO.Services
 				return;
 			}
 
-			if (now.DayOfWeek is DayOfWeek.Wednesday)
+			if (now.DayOfWeek is DayOfWeek.Tuesday)
+			{
+				if (now.Hour is 23 & now.Minute is 10) AssembleAnnounce(now, channel, "가모스");
+			}
+			else if (now.DayOfWeek is DayOfWeek.Wednesday)
 			{
 				if (now.Hour is 23 & now.Minute is 30) VellAnnounce(now, channel);
 			}
@@ -68,8 +73,11 @@ namespace MitoBDO.Services
 			var time = now.AddMinutes(30);
 			var role = channel.Guild.Roles.Where(x => x.Name == bossName).FirstOrDefault();
 
+			var hour = now.AddHours(13);
+			var minute = now.AddMinutes(40);
+
 			if (role is null) return;
-			channel.SendMessageAsync($"{role.Mention} 잠시 후 {time.Hour}시 {time.Minute}분 {bossName} 집결입니다.");
+			channel.SendMessageAsync($"{role.Mention} 잠시 후 {time:HH}시 {time:mm}분\n{OfficialChannel}채널에서 {bossName} 집결입니다.");
 		}
 
 		private void VellAnnounce(DateTime now, SocketTextChannel channel)
@@ -78,7 +86,7 @@ namespace MitoBDO.Services
 			var role = channel.Guild.Roles.Where(x => x.Name == "벨").FirstOrDefault();
 
 			if (role is null) return;
-			channel.SendMessageAsync($"{role.Mention} 잠시 후 {time.Hour}시 {time.Minute}분 벨리아 출항 대기 바랍니다.");
+			channel.SendMessageAsync($"{role.Mention} 잠시 후 {time:HH}시 {time:mm}분\n{OfficialChannel}채널에서 벨리아 출항 대기 바랍니다.");
 		}
 	}
 }

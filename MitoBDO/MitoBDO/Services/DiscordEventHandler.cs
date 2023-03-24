@@ -1,20 +1,26 @@
-﻿using Discord.Commands;
+﻿using Discord;
+using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
 using MitoBDO.Constants;
+using System.ComponentModel;
 
 namespace MitoBDO.Services
 {
 	public class DiscordEventHandler
 	{
 		private readonly IServiceProvider provider;
-		private readonly GuildRoleService roleService;
+		private readonly GuildService guildService;
 		public DiscordEventHandler(IServiceProvider provider)
 		{
 			this.provider = provider;
-			roleService = this.provider.GetRequiredService<GuildRoleService>();
+			guildService = this.provider.GetRequiredService<GuildService>();
 		}
 
+		public async Task ModalHandler(SocketModal modal)
+		{
+			await guildService.GenerateParty(modal);
+		}
 
 		public async Task MenuHandler(SocketMessageComponent component)
 		{
@@ -24,35 +30,41 @@ namespace MitoBDO.Services
 			switch (component.Data.CustomId)
 			{
 				case CustomID.PartyPermit:
-					await roleService.AddRole(component, roleName);
+					await guildService.AddRole(component, roleName);
 					break;
 				case CustomID.PartyBlock:
-					await roleService.RemoveRole(component, roleName);
+					await guildService.RemoveRole(component, roleName);
+					break;
+				case CustomID.GeneratePartyMenu:
+					await guildService.ShowPartyModal(component);
 					break;
 			}
 		}
-
 
 		public async Task ButtonHandler(SocketMessageComponent component)
 		{
 			switch (component.Data.CustomId)
 			{
 				case CustomID.VellPermit:
-					await roleService.AddRole(component, "벨");
+					guildService.AddRole(component, "벨");
 					break;
 				case CustomID.VellBlock:
-					await roleService.RemoveRole(component, "벨");
+					guildService.RemoveRole(component, "벨");
 					break;
 				case CustomID.GarmothPermit:
-					await roleService.AddRole(component, "가모스");
+					guildService.AddRole(component, "가모스");
 					break;
 				case CustomID.GarmothBlock:
-					await roleService.RemoveRole(component, "가모스");
+					guildService.RemoveRole(component, "가모스");
 					break;
-				case CustomID.GenerateParty:
-					this.provider.GetRequiredService<PartyService>().PartyGenerateModal(component);
+				case CustomID.JoinParty:
+					guildService.JoinParty(component);
 					break;
-				case CustomID.PartyPermit:
+				case CustomID.CompleteParty:
+					guildService.ExitParty(component);
+					break;
+				case CustomID.ExitParty:
+					guildService.CompeleteParty(component);
 					break;
 			}
 		}
