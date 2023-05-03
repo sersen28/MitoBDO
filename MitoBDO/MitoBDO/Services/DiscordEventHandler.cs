@@ -11,10 +11,12 @@ namespace MitoBDO.Services
 	{
 		private readonly IServiceProvider provider;
 		private readonly GuildService guildService;
+		private readonly NodeWarService nodeWarService;
 		public DiscordEventHandler(IServiceProvider provider)
 		{
 			this.provider = provider;
 			guildService = this.provider.GetRequiredService<GuildService>();
+			nodeWarService = this.provider.GetRequiredService<NodeWarService>();
 		}
 
 		public async Task ModalHandler(SocketModal modal)
@@ -37,6 +39,9 @@ namespace MitoBDO.Services
 					break;
 				case CustomID.GeneratePartyMenu:
 					await guildService.ShowPartyModal(component);
+					break;
+				case CustomID.Tier1Node:
+					await nodeWarService.GeneratorHandler(component);
 					break;
 			}
 		}

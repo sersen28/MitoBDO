@@ -1,15 +1,12 @@
 ﻿using Discord;
 using Discord.WebSocket;
 using MitoBDO.Constants;
-using MitoBDO.Model;
-using System.ComponentModel;
 using System.Data;
 
 namespace MitoBDO.Services
 {
 	public class GuildService
 	{
-		private const int WaitMilliseconds = 1500;
 
 		public async Task AddRole(SocketMessageComponent component, string roleName)
 		{
@@ -26,7 +23,7 @@ namespace MitoBDO.Services
 			{
 				await component.RespondAsync($"{component.User.Mention} 역할을 찾을 수 없습니다.\n관리자에게 문의하세요.");
 			}
-			await Task.Delay(WaitMilliseconds);
+			await Task.Delay(MitoConst.MessageDeleteWaitMilliseconds);
 			await component.DeleteOriginalResponseAsync();
 		}
 
@@ -45,7 +42,7 @@ namespace MitoBDO.Services
 			{
 				await component.RespondAsync($"{component.User.Mention} 역할을 찾을 수 없습니다.\n관리자에게 문의하세요.");
 			}
-			await Task.Delay(WaitMilliseconds);
+			await Task.Delay(MitoConst.MessageDeleteWaitMilliseconds);
 			await component.DeleteOriginalResponseAsync();
 		}
 

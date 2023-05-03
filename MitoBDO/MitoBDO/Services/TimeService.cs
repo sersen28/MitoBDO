@@ -1,5 +1,6 @@
 ﻿using Discord.Commands;
 using Discord.WebSocket;
+using MitoBDO.Constants;
 using System.Threading;
 using System.Timers;
 using Timer = System.Timers.Timer;
@@ -16,7 +17,6 @@ namespace MitoBDO.Services
 
 		private Timer timer;
 		private double interval = 60000;
-		private ulong channelID = 1036557769353986058;
 
 		public TimeService(DiscordSocketClient discord)
 		{
@@ -37,7 +37,7 @@ namespace MitoBDO.Services
 		private void TimeCheck(object sender, ElapsedEventArgs e)
 		{
 			var now = DateTime.Now;
-			var channel = discord.GetChannel(channelID) as SocketTextChannel;
+			var channel = discord.GetChannel(MitoConst.ArcaliveAnnouncChannel) as SocketTextChannel;
 			if (channel is null) return;
 
 			if (now.Hour is 7 && now.Minute is 0)

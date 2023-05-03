@@ -12,6 +12,8 @@
 		public const string GeneratePartyMenu = "GeneratePartyMenu";
 		public const string GeneratePartyModal = "GeneratePartyModal";
 
+		public const string Tier1Node = nameof(Tier1Node);
+
 
 		public const string JoinParty = nameof(JoinParty);
 		public const string ExitParty = nameof(ExitParty);

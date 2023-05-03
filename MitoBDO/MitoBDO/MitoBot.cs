@@ -57,6 +57,8 @@ namespace MitoBDO
 			.AddSingleton<LoggingService>()
 			.AddSingleton<TimeService>()
 			.AddSingleton<PartyModule>()
+			.AddSingleton<NodeWarModule>()
+			.AddSingleton<NodeWarService>()
 			.AddSingleton<DiscordEventHandler>();
 		}
 	}
