@@ -18,7 +18,7 @@ namespace MitoBDO.Services
 		private Timer timer;
 		private double interval = 60000;
 
-		public TimeService(DiscordSocketClient discord)
+		public TimeService(DiscordSocketClient discord, APIHandler apiHandler)
 		{
 			this.discord = discord;
 
