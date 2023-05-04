@@ -50,26 +50,32 @@ namespace MitoBDO.Services
 		{
 			switch (component.Data.CustomId)
 			{
+				case CustomID.SailboatPermit:
+					await guildService.AddRole(component, RoleName.Sailboat);
+					break;
+				case CustomID.SailboatBlock:
+					await guildService.RemoveRole(component, RoleName.Sailboat);
+					break;
 				case CustomID.VellPermit:
-					guildService.AddRole(component, "벨");
+					await guildService.AddRole(component, RoleName.Vell);
 					break;
 				case CustomID.VellBlock:
-					guildService.RemoveRole(component, "벨");
+					await guildService.RemoveRole(component, RoleName.Vell);
 					break;
 				case CustomID.GarmothPermit:
-					guildService.AddRole(component, "가모스");
+					await guildService.AddRole(component, RoleName.Garmoth);
 					break;
 				case CustomID.GarmothBlock:
-					guildService.RemoveRole(component, "가모스");
+					await guildService.RemoveRole(component, RoleName.Garmoth);
 					break;
 				case CustomID.JoinParty:
-					guildService.JoinParty(component);
+					await guildService.JoinParty(component);
 					break;
 				case CustomID.CompleteParty:
-					guildService.ExitParty(component);
+					await guildService.ExitParty(component);
 					break;
 				case CustomID.ExitParty:
-					guildService.CompeleteParty(component);
+					await guildService.CompeleteParty(component);
 					break;
 			}
 		}

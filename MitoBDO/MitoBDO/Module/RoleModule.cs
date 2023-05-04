@@ -101,5 +101,26 @@ namespace MitoBDO.Module
 				embed: embed.Build(),
 				components: components.Build());
 		}
+
+
+		[Command("admin_sailboat_role")]
+		[Discord.Interactions.RequireUserPermission(GuildPermission.Administrator)]
+		public async Task HeavySailboatRole()
+		{
+			var embed = new EmbedBuilder();
+			embed.Color = Color.Blue;
+			embed.Title = "중범선 오너 역할 설정";
+			embed.Description = "중범선 오너 여부를 설정할 수 있습니다.\n"
+				+ "현재 설정되어 있는 역할은 서버 내 자신의 프로필에서 확인 가능합니다.";
+
+			var components = new ComponentBuilder();
+			components.WithButton("중범선 역할 받기", CustomID.SailboatPermit, ButtonStyle.Primary);
+			components.WithButton("중범선 역할 삭제", CustomID.SailboatBlock, ButtonStyle.Danger);
+
+			await Context.Message.DeleteAsync();
+			await Context.Channel.SendMessageAsync(
+				embed: embed.Build(),
+				components: components.Build());
+		}
 	}
 }

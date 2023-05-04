@@ -17,7 +17,7 @@ namespace MitoBDO.Services
 			if (role is not null)
 			{
 				await user.AddRoleAsync(role);
-				await component.RespondAsync($"{component.User.Mention} {role.Name} 알림이 등록되었습니다!");
+				await component.RespondAsync($"{component.User.Mention} {role.Name} 역할이 등록되었습니다!");
 			}
 			else
 			{
@@ -36,7 +36,7 @@ namespace MitoBDO.Services
 			if (role is not null)
 			{
 				await user.RemoveRoleAsync(role);
-				await component.RespondAsync($"{component.User.Mention} {role.Name} 알림이 차단되었습니다!");
+				await component.RespondAsync($"{component.User.Mention} {role.Name} 역할이 삭제되었습니다!");
 			}
 			else
 			{
