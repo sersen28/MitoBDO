@@ -77,6 +77,12 @@ namespace MitoBDO.Services
 				case CustomID.ExitParty:
 					await guildService.CompeleteParty(component);
 					break;
+				case CustomID.CallSailBoat:
+					await nodeWarService.CallSailBoat(component);
+					break;
+				case CustomID.NeedCompass:
+					await nodeWarService.NeedCompass(component);
+					break;
 			}
 		}
 	}

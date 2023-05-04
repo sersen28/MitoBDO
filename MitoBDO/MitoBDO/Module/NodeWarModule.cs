@@ -71,6 +71,8 @@ namespace MitoBDO.Module
 				}
 			}
 			components.WithSelectMenu(Tier1Menu);
+			components.WithButton("중범선 동원령", CustomID.CallSailBoat, ButtonStyle.Danger);
+			components.WithButton("나침반 챙겨라", CustomID.NeedCompass, ButtonStyle.Primary);
 
 			await Context.Message.DeleteAsync();
 			await Context.Channel.SendMessageAsync(

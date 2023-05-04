@@ -63,17 +63,52 @@ namespace MitoBDO.Services
 		{
 			if (node is null) return;
 
+			var time = DateTime.Now.Hour > 21 ? DateTime.Now : DateTime.Now.AddDays(1);
 			var date = DateTime.Now.ToString(string.Format("yyyy년 MM월 dd일 ddd요일", CultureInfo.CreateSpecificCulture("ko-KR")));
+			
 			var embed = new EmbedBuilder();
 			embed.Color = Color.Blue;
-			embed.Title = $"{date} 거점전";
-			embed.Description = $"거점: {node.Name}\n"
+			embed.Title = $"[{node.Nation}] - {node.Name}";
+			embed.Description =
+				  $"일시: {date} 21시\n"
 				+ $"단계: {node.Stage}\n"
 				+ $"참여 가능 인원: {node.Num}\n"
 				+ $"20시 55분까지 {node.Nation} 1채널에서 대기 바랍니다.\n";
 
-			await channel.SendMessageAsync(
-				embed: embed.Build());
+			var nodeChannel = discord.GetChannel(MitoConst.ArcaliveNodeWarChannel) as SocketTextChannel;
+			var guideMessage =
+				$"**{date}** 거점전 공지입니다.\n"
+				+ $"거점전 세팅 & 준비물은 {nodeChannel?.Mention} 에서 확인하실 수 있습니다.\n"
+				+ $"초행일 경우 필독 바랍니다.";
+
+			await channel.SendMessageAsync(guideMessage, embed: embed.Build());
+		}
+
+		public async Task CallSailBoat(SocketMessageComponent component)
+		{
+			var channel = discord.GetChannel(MitoConst.ArcaliveTestChannel) as SocketTextChannel;
+			if (channel is null) return;
+
+			var role = channel.Guild.Roles.Where(x => x.Name == RoleName.Sailboat).FirstOrDefault();
+			var message = $"{role.Mention}\n```해안 성채가 예상됩니다. 중범선 동원 바랍니다.```";
+			await channel.SendMessageAsync(message);
+
+			await component.RespondAsync($"{component.User.Mention} 공지를 전송하였습니다.\n확인 바랍니다.");
+			await Task.Delay(MitoConst.MessageDeleteWaitMilliseconds);
+			await component.DeleteOriginalResponseAsync();
+		}
+
+		public async Task NeedCompass(SocketMessageComponent component)
+		{
+			var channel = discord.GetChannel(MitoConst.ArcaliveTestChannel) as SocketTextChannel;
+			if (channel is null) return;
+
+			var message = $"```[사막 거점입니다. 나침반 챙겨주세요.]```";
+			await channel.SendMessageAsync(message);
+
+			await component.RespondAsync($"{component.User.Mention} 공지를 전송하였습니다.\n확인 바랍니다.");
+			await Task.Delay(MitoConst.MessageDeleteWaitMilliseconds);
+			await component.DeleteOriginalResponseAsync();
 		}
 	}
 }

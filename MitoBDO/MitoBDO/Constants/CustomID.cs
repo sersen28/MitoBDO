@@ -14,6 +14,8 @@
 
 		public const string SailboatPermit = nameof(SailboatPermit);
 		public const string SailboatBlock = nameof(SailboatBlock);
+		public const string CallSailBoat = nameof(CallSailBoat);
+		public const string NeedCompass = nameof(NeedCompass);
 		public const string Tier1Node = nameof(Tier1Node);
 
 		public const string JoinParty = nameof(JoinParty);
