@@ -47,7 +47,7 @@ namespace MitoBDO.Services
 
 		public async Task GeneratorHandler(SocketMessageComponent component)
 		{
-			var channel = discord.GetChannel(MitoConst.ArcaliveTestChannel) as SocketTextChannel;
+			var channel = discord.GetChannel(MitoConst.ArcaliveAnnouncChannel) as SocketTextChannel;
 			var nodeName = component.Data.Values.FirstOrDefault();
 
 			if (channel is null || string.IsNullOrEmpty(nodeName)) return;
@@ -65,7 +65,7 @@ namespace MitoBDO.Services
 
 			var time = DateTime.Now.Hour > 21 ? DateTime.Now : DateTime.Now.AddDays(1);
 			var date = DateTime.Now.ToString(string.Format("yyyy년 MM월 dd일 ddd요일", CultureInfo.CreateSpecificCulture("ko-KR")));
-			
+
 			var embed = new EmbedBuilder();
 			embed.Color = Color.Blue;
 			embed.Title = $"[{node.Nation}] - {node.Name}";
@@ -77,7 +77,7 @@ namespace MitoBDO.Services
 
 			var nodeChannel = discord.GetChannel(MitoConst.ArcaliveNodeWarChannel) as SocketTextChannel;
 			var guideMessage =
-				$"**{date}** 거점전 공지입니다.\n"
+				$"{channel.Guild.EveryoneRole.Mention} **{date}** 거점전 공지입니다.\n"
 				+ $"거점전 세팅 & 준비물은 {nodeChannel?.Mention} 에서 확인하실 수 있습니다.\n"
 				+ $"초행일 경우 필독 바랍니다.";
 
@@ -86,7 +86,7 @@ namespace MitoBDO.Services
 
 		public async Task CallSailBoat(SocketMessageComponent component)
 		{
-			var channel = discord.GetChannel(MitoConst.ArcaliveTestChannel) as SocketTextChannel;
+			var channel = discord.GetChannel(MitoConst.ArcaliveAnnouncChannel) as SocketTextChannel;
 			if (channel is null) return;
 
 			var role = channel.Guild.Roles.Where(x => x.Name == RoleName.Sailboat).FirstOrDefault();
@@ -100,7 +100,7 @@ namespace MitoBDO.Services
 
 		public async Task NeedCompass(SocketMessageComponent component)
 		{
-			var channel = discord.GetChannel(MitoConst.ArcaliveTestChannel) as SocketTextChannel;
+			var channel = discord.GetChannel(MitoConst.ArcaliveAnnouncChannel) as SocketTextChannel;
 			if (channel is null) return;
 
 			var message = $"```[사막 거점입니다. 나침반 챙겨주세요.]```";
