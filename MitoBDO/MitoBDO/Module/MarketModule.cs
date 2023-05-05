@@ -18,11 +18,13 @@ namespace MitoBDO.Module
 			this.marketService = marketService;
 
 
-		}
 
+		}
+		/*
 		[Command("아이템")]
 		public async Task FindItem([Remainder] string command)
 			=> await marketService.FindItem(Context, command);
+		*/
 
 		[Command("등록대기")]
 		public async Task WaitItem()
