@@ -16,6 +16,8 @@ namespace MitoBDO.Module
 		public MarketModule(MarketService marketService) 
 		{
 			this.marketService = marketService;
+
+
 		}
 
 		[Command("아이템")]
