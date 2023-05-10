@@ -16,15 +16,23 @@ namespace MitoBDO.Module
 		public MarketModule(MarketService marketService) 
 		{
 			this.marketService = marketService;
-
-
-
 		}
-		/*
-		[Command("아이템")]
-		public async Task FindItem([Remainder] string command)
-			=> await marketService.FindItem(Context, command);
-		*/
+
+		[Command("db")]
+		public async Task WaitItem3()
+			=> await marketService.ReadAllMarketAlarm(Context);
+
+		[Command("알람확인")]
+		public async Task myalsr()
+			=> await marketService.ReadMyMarketAlarm(Context);
+
+		[Command("알람등록")]
+		public async Task WaitItem2(params string[] args)
+			=> await marketService.AddMarketAlarm(Context, args);
+
+		[Command("알람삭제")]
+		public async Task WaitItem4(params string[] args)
+			=> await marketService.DeleteMarketAlarm(Context, args);
 
 		[Command("등록대기")]
 		public async Task WaitItem()

@@ -1,4 +1,5 @@
-﻿using Discord.Commands;
+﻿using Discord;
+using Discord.Commands;
 using Discord.WebSocket;
 using MitoBDO.Constants;
 using System.Threading;
@@ -10,20 +11,22 @@ namespace MitoBDO.Services
 	public class TimeService : ModuleBase
 	{
 		private readonly DiscordSocketClient discord;
+		private readonly MarketService marketService;
 		private const string OfficialChannel = "에페리아 3";
 
 		public static bool GarmothAssembly = true;
 		public static bool VellAssembly = true;
 
 		private Timer timer;
-		private double interval = 60000;
+		private const double TimerInterval = 60000;
 
-		public TimeService(DiscordSocketClient discord, APIHandler apiHandler)
+		public TimeService(DiscordSocketClient discord, APIHandler apiHandler, MarketService marketService)
 		{
 			this.discord = discord;
+			this.marketService = marketService;
 
 			timer = new Timer();
-			timer.Interval = interval;
+			timer.Interval = TimerInterval;
 			timer.Elapsed += TimeCheck;
 			timer.Start();
 		}
@@ -31,10 +34,16 @@ namespace MitoBDO.Services
 		private void ResetTimeService()
 		{
 			GarmothAssembly = true;
-			GarmothAssembly = true;
+			VellAssembly = true;
 		}
 
 		private void TimeCheck(object sender, ElapsedEventArgs e)
+		{
+			BossTimeCheck();
+			Task.Run(marketService.MarketTimeCheck);
+		}
+
+		private void BossTimeCheck()
 		{
 			var now = DateTime.Now;
 			var channel = discord.GetChannel(MitoConst.ArcaliveAnnouncChannel) as SocketTextChannel;

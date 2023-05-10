@@ -61,6 +61,7 @@ namespace MitoBDO
 			.AddSingleton<NodeWarService>()
 			.AddSingleton<MarketModule>()
 			.AddSingleton<MarketService>()
+			.AddSingleton<DatabaseService>()
 			.AddSingleton<APIHandler>()
 			.AddSingleton<DiscordEventHandler>();
 		}
