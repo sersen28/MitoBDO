@@ -18,7 +18,7 @@ namespace MitoBDO.Module
 			this.marketService = marketService;
 		}
 
-		[Command("db")]
+		[Command("admin_db_all_read")]
 		public async Task WaitItem3()
 			=> await marketService.ReadAllMarketAlarm(Context);
 

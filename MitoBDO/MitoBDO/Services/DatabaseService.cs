@@ -69,23 +69,7 @@ namespace MitoBDO.Services
 					command.Parameters.AddWithValue("@cd", $"%{alarm.itemCode}%");
 					command.Parameters.AddWithValue("@lv", $"%{alarm.enLevel}%");
 					command.Parameters.AddWithValue("@id", $"%{alarm.userID}%");
-					using (SQLiteDataReader rdr = command.ExecuteReader())
-					{
-						while (rdr.Read())
-						{
-							try
-							{
-								var code = ulong.Parse(rdr["code"].ToString());
-								var level = ulong.Parse(rdr["enLevel"].ToString());
-
-								ret.Add(new MarketAlarm(code, level, rdr["userID"].ToString()));
-							}
-							catch (Exception e)
-							{
-								continue;
-							}
-						}
-					}
+					command.ExecuteNonQuery();
 					return true;
 				}
 			}
@@ -95,6 +79,7 @@ namespace MitoBDO.Services
 			}
 		}
 
+		#region READ
 		public List<MarketAlarm> ReadMyAlarmTables(string userID)
 		{
 			var ret = new List<MarketAlarm>();
@@ -102,52 +87,59 @@ namespace MitoBDO.Services
 			{
 				command.CommandText = "SELECT * FROM MarketAlarm WHERE userID like @id";
 				command.Parameters.AddWithValue("@id", $"%{userID}%");
-				using (SQLiteDataReader rdr = command.ExecuteReader())
-				{
-					while (rdr.Read())
-					{
-						try
-						{
-							var code = ulong.Parse(rdr["code"].ToString());
-							var level = ulong.Parse(rdr["enLevel"].ToString());
-
-							ret.Add(new MarketAlarm(code, level, rdr["userID"].ToString()));
-						}
-						catch (Exception e)
-						{
-							continue;
-						}
-					}
-				}
+				return GetMarketAlarmListFromCommand(command);
 			}
-			return ret;
 		}
 
-		public List<MarketAlarm> ReadAllAlarmTables()
+		public List<MarketAlarm> ReadAlarmTableFromWaitItem(WaitItem item)
 		{
 			var ret = new List<MarketAlarm>();
 			using (SQLiteCommand command = MitoDB.CreateCommand())
 			{
-				command.CommandText = "SELECT * FROM MarketAlarm";
-				using (SQLiteDataReader rdr = command.ExecuteReader())
-				{
-					while (rdr.Read())
-					{
-						try
-						{
-							var code = ulong.Parse(rdr["code"].ToString());
-							var level = ulong.Parse(rdr["enLevel"].ToString());
+				command.CommandText = "SELECT * FROM MarketAlarm WHERE code like @cd AND enLevel like @lv";
+				command.Parameters.AddWithValue("@cd", $"%{item.ItemCode}%");
+				command.Parameters.AddWithValue("@lv", $"%{item.EnhancedLevel}%");
+				return GetMarketAlarmListFromCommand(command);
+			}
+		}
 
-							ret.Add(new MarketAlarm(code, level, rdr["userID"].ToString()));
-						}
-						catch(Exception e) 
+		public List<MarketAlarm> ReadAllAlarmTables()
+		{
+			using (SQLiteCommand command = MitoDB.CreateCommand())
+			{
+				command.CommandText = "SELECT * FROM MarketAlarm";
+				return GetMarketAlarmListFromCommand(command);
+			}
+		}
+
+		private List<MarketAlarm> GetMarketAlarmListFromCommand(SQLiteCommand command)
+		{
+			var ret = new List<MarketAlarm>();
+			using (SQLiteDataReader rdr = command.ExecuteReader())
+			{
+				while (rdr.Read())
+				{
+					try
+					{
+						var code = uint.Parse(rdr["code"].ToString());
+						var level = ulong.Parse(rdr["enLevel"].ToString());
+						var id = rdr["userID"]?.ToString();
+
+						ret.Add(new MarketAlarm
 						{
-							continue;
-						}
+							itemCode = code,
+							enLevel = level,
+							userID = id,
+						});
+					}
+					catch (Exception e)
+					{
+						continue;
 					}
 				}
 			}
 			return ret;
 		}
+		#endregion
 	}
 }

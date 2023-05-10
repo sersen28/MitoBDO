@@ -8,6 +8,7 @@ using Newtonsoft.Json.Linq;
 using RestSharp;
 using System.Data.SQLite;
 using System.Diagnostics;
+using System.Security.Principal;
 using System.Text;
 
 namespace MitoBDO.Services
@@ -44,9 +45,9 @@ namespace MitoBDO.Services
 			}
 
 			string message = string.Empty;
-			if (ulong.TryParse(args[1], out var enLevel) && ulong.TryParse(item.ItemCode, out var code))
+			if (ulong.TryParse(args[1], out var enLevel))
 			{
-				var alarm = new MarketAlarm(code, enLevel, $"{context.User.Id}");
+				var alarm = new MarketAlarm(item.ItemCode, enLevel, $"{context.User.Id}");
 
 				if (databaseService.DeleteAlarmTable(alarm))
 				{
@@ -54,7 +55,7 @@ namespace MitoBDO.Services
 					var embed = new EmbedBuilder();
 					embed.Color = Color.Blue;
 					embed.Title = $"{item.ItemName}";
-					embed.ThumbnailUrl = MitoConst.GetItemImageURL(item.ItemCode);
+					embed.ThumbnailUrl = MitoConst.GetItemImageURL($"{item.ItemCode}");
 					embed.Description = $"아이템 코드: {item.ItemCode}\n"
 						+ $"카테고리: {item.MainCategory}\n"
 						+ $"서브 카테고리: {item.SubCategory}\n";
@@ -70,27 +71,55 @@ namespace MitoBDO.Services
 			else
 			{
 				message = $"{context.User.Mention} 거래소 알림 삭제가 실패했습니다.\n"
-					+ "명령어를 다시 확인해주십시오.";
+					+ "명령어를 다시 확인해주십시오."
+					+ "명령어 양식: !알람등록 [아이템이름] [강화단계]\n"
+					+ "[아이템이름]: 공백을 @로 대신하여 정확히 입력해주셔야 합니다.\n"
+					+ "[강화단계]: 0~5 혹은 0~20까지의 강화단계를 숫자로 입력하시면 됩니다.\n\n"
+					+ "ex) !알람등록 죽은신의@갑옷 4\n"
+					+ "ex) !알람등록 데보레카@목걸이 5\n"
+					+ "ex) !알람등록 쿠툼@단검 20\n"
+					;
 				await context.Channel.SendMessageAsync(message);
 			}
 		}
 
 		public async Task AddMarketAlarm(SocketCommandContext context, string[] args)
 		{
-			if (args.Length < 2) {
+			if (args.Length != 2)
+			{
+				var error = $"{context.User.Mention} 거래소 알림 등록이 실패했습니다.\n"
+					+ "명령어 양식이 다릅니다.\n\n"
+					+ "명령어 양식: !알람등록 [아이템이름] [강화단계]\n"
+					+ "[아이템이름]: 공백을 @로 대신하여 정확히 입력해주셔야 합니다.\n"
+					+ "[강화단계]: 0~5 혹은 0~20까지의 강화단계를 숫자로 입력하시면 됩니다.\n\n"
+					+ "ex) !알람등록 죽은신의@갑옷 4\n"
+					+ "ex) !알람등록 데보레카@목걸이 5\n"
+					+ "ex) !알람등록 쿠툼@단검 20\n"
+					;
+				await context.Channel.SendMessageAsync(error);
 				return;
 			}
 
 			var item = FindItemByName(args[0]);
 			if (item is null)
 			{
+				var error = $"{context.User.Mention} 거래소 알림 등록이 실패했습니다.\n"
+					+ "요청하신 아이템을 찾을 수 없습니다.\n\n"
+					+ "명령어 양식: !알람등록 [아이템이름] [강화단계]\n"
+					+ "[아이템이름]: 공백을 @로 대신하여 정확히 입력해주셔야 합니다.\n"
+					+ "[강화단계]: 0~5 혹은 0~20까지의 강화단계를 숫자로 입력하시면 됩니다.\n\n"
+					+ "ex) !알람등록 죽은신의@갑옷 4\n"
+					+ "ex) !알람등록 데보레카@목걸이 5\n"
+					+ "ex) !알람등록 쿠툼@단검 20\n"
+					;
+				await context.Channel.SendMessageAsync(error);
 				return;
 			}
 
 			string message = string.Empty;
-			if (ulong.TryParse(args[1], out var enLevel) && ulong.TryParse(item.ItemCode, out var code))
+			if (ulong.TryParse(args[1], out var enLevel))
 			{
-				var alarm = new MarketAlarm(code, enLevel, $"{context.User.Id}");
+				var alarm = new MarketAlarm(item.ItemCode, enLevel, $"{context.User.Id}");
 
 				if (databaseService.InsertAlarmTable(alarm))
 				{
@@ -98,7 +127,7 @@ namespace MitoBDO.Services
 					var embed = new EmbedBuilder();
 					embed.Color = Color.Blue;
 					embed.Title = $"{item.ItemName}";
-					embed.ThumbnailUrl = MitoConst.GetItemImageURL(item.ItemCode);
+					embed.ThumbnailUrl = MitoConst.GetItemImageURL($"{item.ItemCode}");
 					embed.Description = $"아이템 코드: {item.ItemCode}\n"
 						+ $"카테고리: {item.MainCategory}\n"
 						+ $"서브 카테고리: {item.SubCategory}\n";
@@ -114,7 +143,14 @@ namespace MitoBDO.Services
 			else
 			{
 				message = $"{context.User.Mention} 거래소 알림 등록이 실패했습니다.\n"
-					+"명령어를 다시 확인해주십시오.";
+					+ "명령어를 다시 확인해주십시오."
+					+ "명령어 양식: !알람등록 [아이템이름] [강화단계]\n"
+					+ "[아이템이름]: 공백을 @로 대신하여 정확히 입력해주셔야 합니다.\n"
+					+ "[강화단계]: 0~5 혹은 0~20까지의 강화단계를 숫자로 입력하시면 됩니다.\n\n"
+					+ "ex) !알람등록 죽은신의@갑옷 4\n"
+					+ "ex) !알람등록 데보레카@목걸이 5\n"
+					+ "ex) !알람등록 쿠툼@단검 20\n"
+					;
 				await context.Channel.SendMessageAsync(message);
 			}
 		}
@@ -122,13 +158,14 @@ namespace MitoBDO.Services
 		public async Task ReadMyMarketAlarm(SocketCommandContext context)
 		{
 			var alarms = databaseService.ReadMyAlarmTables($"{context.User.Id}");
-			string message = string.Empty;
+			string message = $"{context.User.Mention} 님이 등록하신 알람 목록입니다.\n\n";
 			foreach (var alarm in alarms)
 			{
-				message += MarketAlarm.AlarmToString(alarm);
+				var item = ItemList.Where(x => x.ItemCode == alarm.itemCode).FirstOrDefault();
+				message += $"{item.ItemName}(강화 단계: {alarm.enLevel})\n";
 			}
 
-			if (string.IsNullOrEmpty(message))
+			if (alarms.Count <= 0)
 			{
 				message = $"{context.User.Mention} 등록된 알람이 없습니다.";
 			}
@@ -164,127 +201,75 @@ namespace MitoBDO.Services
 			{
 				while (!reader.EndOfStream)
 				{
-					var line = reader.ReadLine();
-					if (line is null) continue;
+					var data = reader.ReadLine()?.Split(',');
+					if (data is null || data.Length < 6) continue;
 
-					var data = line.Split(',');
-
-					if (data.Length < 6) continue;
-					ItemList.Add(new MarketItem
+					if (uint.TryParse(data[5], out var code))
 					{
-						MainCategory = data[1],
-						SubCategory = data[3],
-						ItemName = data[4],
-						ItemCode = data[5],
-					});
+						ItemList.Add(new MarketItem
+						{
+							MainCategory = data[1],
+							SubCategory = data[3],
+							ItemName = data[4],
+							ItemCode = code
+						});
+					}
+
 				}
 			}
 		}
 
-		public async Task FindItem(SocketCommandContext context, string code)
+		public async void MarketTimeCheck()
 		{
-			var request = new RestRequest("https://trade.kr.playblackdesert.com/Trademarket/GetMarketPriceInfo", Method.Post);
-			request.AddParameter("keyType", "0");
-			request.AddParameter("mainKey", code);
-			request.AddParameter("subKey", "4");
-			var response = APIHandler.restClient.Execute(request);
-			var json = JObject.Parse(response.Content);
+			var waitList = apiHandler.GetMarketWaitList();
+			if (waitList is null)
+			{
+				// 데이터 오류
+				return;
+			}
 
-			await context.Channel.SendMessageAsync(code);
+			foreach (var wait in waitList)
+			{
+				var alarms = databaseService.ReadAlarmTableFromWaitItem(wait);
+				await SendWaitItemNotify(wait, alarms);
+			}
 		}
 
-		public async Task MarketTimeCheck()
+		private async Task SendWaitItemNotify(WaitItem wait, List<MarketAlarm> alarms)
 		{
-			var channel = discord.GetChannel(MitoConst.DeveloperTestChannel) as SocketTextChannel;
-
-			var request = new RestRequest("https://trade.kr.playblackdesert.com/Trademarket/GetWorldMarketWaitList ", Method.Post);
-			var response = APIHandler.restClient.Execute(request);
-			var json = JObject.Parse(response.Content);
-
-			var t = json["resultMsg"].ToString();
-			var datas = t.Split('|');
-
-			foreach (var data in datas)
+			var embed = BuildWaitItemEmbed(wait);
+			foreach (var alarm in alarms)
 			{
-				try
+				if(ulong.TryParse(alarm.userID, out var id))
 				{
-					var i = data.Split('-');
-					if (i.Length == 4)
-					{
-						var code = i[0];
-						var en_level = i[1];
-						var price = long.Parse(i[2]);
-						var timestamp = long.Parse(i[3]);
-
-						var item = ItemList.Where(x => x.ItemCode == code).FirstOrDefault();
-						var time = TimeUtil.TimeStampToDateTime(timestamp);
-
-						if (item is null)
-						{
-							return;
-						}
-
-						var embed = new EmbedBuilder();
-						embed.Color = Color.Blue;
-						embed.Title = $"{item.ItemName}";
-						embed.Description = $"가격: {string.Format("{0:#,0}", price)}\n"
-							+ $"강화 단계: {en_level}\n"
-							+ $"등록 시간: {time:HH}시 {time:mm}분\n";
-						embed.ThumbnailUrl = MitoConst.GetItemImageURL(code);
-						await channel.SendMessageAsync(embed: embed.Build());
-					}
-				}
-				catch (Exception e)
-				{
-					continue;
+					await discord.GetUser(id).SendMessageAsync(embed: embed);
 				}
 			}
 		}
 
 		public async Task WaitItem(SocketCommandContext context)
 		{
-			var request = new RestRequest("https://trade.kr.playblackdesert.com/Trademarket/GetWorldMarketWaitList ", Method.Post);
-			var response = APIHandler.restClient.Execute(request);
-			var json = JObject.Parse(response.Content);
+			var waitList = apiHandler.GetMarketWaitList();
+			if (waitList is null) return;
 
-			var t = json["resultMsg"].ToString();
-			var datas = t.Split('|');
-
-			foreach (var data in datas)
+			foreach (var waitItem in waitList)
 			{
-				try
-				{
-					var i = data.Split('-');
-					if (i.Length == 4)
-					{
-						var code = i[0];
-						var en_level = i[1];
-						var price = long.Parse(i[2]);
-						var timestamp = long.Parse(i[3]);
-
-						var item = ItemList.Where(x => x.ItemCode == code).FirstOrDefault();
-						var time = TimeUtil.TimeStampToDateTime(timestamp);
-
-						if (item is null)
-						{
-							return;
-						}
-
-						var embed = new EmbedBuilder();
-						embed.Color = Color.Blue;
-						embed.Title = $"{item.ItemName}";
-						embed.Description = $"가격: {string.Format("{0:#,0}", price)}\n"
-							+ $"강화 단계: {en_level}\n"
-							+ $"등록 시간: {time:HH}시 {time:mm}분\n";
-						embed.ThumbnailUrl = MitoConst.GetItemImageURL(code);
-						await context.Channel.SendMessageAsync(embed: embed.Build());
-					}
-				}
-				catch (Exception e)
-				{
-					continue;
-				}
+				await context.Channel.SendMessageAsync(embed: BuildWaitItemEmbed(waitItem));
 			}
+		}
+		private Embed BuildWaitItemEmbed(WaitItem waitItem)
+		{
+			var embed = new EmbedBuilder();
+			var item = ItemList.Where(x => x.ItemCode == waitItem.ItemCode).FirstOrDefault();
+			var time = TimeUtil.TimeStampToDateTime(waitItem.TimeStamp);
+			embed.Color = Color.Blue;
+			embed.Title = $"{item.ItemName} 등록 대기";
+			embed.Description = $"가격: {string.Format("{0:#,0}", waitItem.Price)}\n"
+				+ $"강화 단계: {waitItem.EnhancedLevel}\n"
+				+ $"등록 시간: {time:HH}시 {time:mm}분\n";
+			embed.ThumbnailUrl = MitoConst.GetItemImageURL($"{item.ItemCode}");
+
+			return embed.Build();
 		}
 	}
 }

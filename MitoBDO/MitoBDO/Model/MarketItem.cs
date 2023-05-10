@@ -5,6 +5,6 @@
 		public string? MainCategory { get; set; }
 		public string? SubCategory { get; set; }
 		public string? ItemName { get; set; }
-		public string? ItemCode { get; set; }
+		public uint ItemCode { get; set; }
 	}
 }

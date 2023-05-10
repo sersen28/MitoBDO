@@ -1,16 +1,23 @@
-﻿namespace MitoBDO.Model
+﻿using System.Data.SQLite;
+
+namespace MitoBDO.Model
 {
 	public class MarketAlarm
 	{
-		public ulong itemCode;
+		public uint itemCode;
 		public ulong enLevel;
-		public string userID;
+		public string? userID;
 
-		public MarketAlarm(ulong itemCode, ulong enLevel, string userID)
+		public MarketAlarm()
 		{
-			this.userID = userID;
+
+		}
+
+		public MarketAlarm(uint itemCode, ulong enLevel, string? userID)
+		{
 			this.itemCode = itemCode;
 			this.enLevel = enLevel;
+			this.userID = userID;
 		}
 
 		public static string AlarmToString(MarketAlarm alarm)
