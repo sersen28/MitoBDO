@@ -3,14 +3,14 @@
 	public static class CustomID
 	{
 		public const string VellPermit = nameof(VellPermit);
-		public const string VellBlock = "VellBlock";
-		public const string GarmothPermit = "GarmothPermit";
-		public const string GarmothBlock = "GarmothBlock";
-		public const string SelectPartyRole = "SelectPartyRole";
-		public const string PartyPermit = "PartyPermit";
-		public const string PartyBlock = "PartyBlock";
-		public const string GeneratePartyMenu = "GeneratePartyMenu";
-		public const string GeneratePartyModal = "GeneratePartyModal";
+		public const string VellBlock = nameof(VellBlock);
+		public const string GarmothPermit = nameof(GarmothPermit);
+		public const string GarmothBlock = nameof(GarmothBlock);
+		public const string SelectPartyRole = nameof(SelectPartyRole);
+		public const string PartyPermit = nameof(PartyPermit);
+		public const string PartyBlock = nameof(PartyBlock);
+		public const string GeneratePartyMenu = nameof(GeneratePartyMenu);
+		public const string GeneratePartyModal = nameof(GeneratePartyModal);
 
 		public const string SailboatPermit = nameof(SailboatPermit);
 		public const string SailboatBlock = nameof(SailboatBlock);
