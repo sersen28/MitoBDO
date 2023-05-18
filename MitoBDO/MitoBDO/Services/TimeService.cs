@@ -12,7 +12,6 @@ namespace MitoBDO.Services
 	{
 		private readonly DiscordSocketClient discord;
 		private readonly MarketService marketService;
-		private const string OfficialChannel = "에페리아 3";
 
 		public static bool GarmothAssembly = true;
 		public static bool VellAssembly = true;
@@ -86,7 +85,7 @@ namespace MitoBDO.Services
 			var minute = now.AddMinutes(40);
 
 			if (role is null) return;
-			channel.SendMessageAsync($"{role.Mention} 잠시 후 {time:HH}시 {time:mm}분\n{OfficialChannel}채널에서 {bossName} 집결입니다.");
+			channel.SendMessageAsync($"{role.Mention} 잠시 후 {time:HH}시 {time:mm}분\n{MitoConst.ArcaliveOfficialChannel}채널에서 {bossName} 집결입니다.");
 		}
 
 		private void VellAnnounce(DateTime now, SocketTextChannel channel)
@@ -95,7 +94,7 @@ namespace MitoBDO.Services
 			var role = channel.Guild.Roles.Where(x => x.Name == "벨").FirstOrDefault();
 
 			if (role is null) return;
-			channel.SendMessageAsync($"{role.Mention} 잠시 후 {time:HH}시 {time:mm}분\n{OfficialChannel}채널에서 벨리아 출항 대기 바랍니다.");
+			channel.SendMessageAsync($"{role.Mention} 잠시 후 {time:HH}시 {time:mm}분\n{MitoConst.ArcaliveOfficialChannel}채널에서 벨리아 출항 대기 바랍니다.");
 		}
 	}
 }
