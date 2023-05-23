@@ -11,7 +11,7 @@
 		public const ulong ArcaliveTestChannel = 1078553582359543849;
 		public const ulong DeveloperTestChannel = 1072018886217715786;
 		public const ulong ArcaliveNodeWarChannel = 1061649286128992356;
-		public const string ArcaliveOfficialChannel = "에페리아 3";
+		public const string ArcaliveOfficialChannel = "하이델 3";
 
 		public static string GetItemImageURL(string itemCode)
 		{

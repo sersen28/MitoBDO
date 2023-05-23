@@ -48,8 +48,8 @@ namespace MitoBDO.Module
 			var embed = new EmbedBuilder();
 			embed.Color = Color.Blue;
 			embed.Title = "거점전 공지 생성기";
-			embed.Description = "1단계 거점전 공지를 생성합니다.\n"
-				+ "2단계, 3단계 공지 생성이 필요하거나 거점 정보 변경시 관리자에게 문의 바랍니다.\n";
+			embed.Description = "거점전 공지를 생성합니다.\n"
+				+ "3단계, 4단계 공지 생성이 필요하거나 거점 정보 변경시 관리자에게 문의 바랍니다.\n";
 
 			var components = new ComponentBuilder();
 			var Tier1Menu = new SelectMenuBuilder()
@@ -70,7 +70,25 @@ namespace MitoBDO.Module
 					Tier1Menu.AddOption(node.Name, node.Name, $"{node.Day}, {node.Num}인 거점");
 				}
 			}
+
+			var Tier2Menu = new SelectMenuBuilder()
+			{
+				CustomId = CustomID.Tier2Nodes,
+				Placeholder = "2단계 거점",
+				MaxValues = 1,
+				MinValues = 1,
+			};
+			var Tier2Nodes = nodes.Where(x => x.Stage.Contains("2단"));
+			if (Tier2Nodes.Any())
+			{
+				foreach (var node in Tier2Nodes)
+				{
+					Tier2Menu.AddOption(node.Name, node.Name, $"{node.Day}, {node.Num}인 거점");
+				}
+			}
+
 			components.WithSelectMenu(Tier1Menu);
+			components.WithSelectMenu(Tier2Menu);
 			components.WithButton("중범선 동원령", CustomID.CallSailBoat, ButtonStyle.Danger);
 			components.WithButton("나침반 챙겨라", CustomID.NeedCompass, ButtonStyle.Primary);
 
