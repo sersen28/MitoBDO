@@ -47,7 +47,11 @@ namespace MitoBDO.Services
 
 		public async Task GeneratorHandler(SocketMessageComponent component)
 		{
+#if DEBUG
+			var channel = discord.GetChannel(MitoConst.DeveloperTestChannel) as SocketTextChannel;
+#else
 			var channel = discord.GetChannel(MitoConst.ArcaliveAnnouncChannel) as SocketTextChannel;
+#endif
 			var nodeName = component.Data.Values.FirstOrDefault();
 
 			if (channel is null || string.IsNullOrEmpty(nodeName)) return;
