@@ -43,6 +43,9 @@ namespace MitoBDO.Services
 				case CustomID.Tier1Node:
 					await nodeWarService.GeneratorHandler(component);
 					break;
+				case CustomID.Tier2Node:
+					await nodeWarService.GeneratorHandler(component);
+					break;
 			}
 		}
 

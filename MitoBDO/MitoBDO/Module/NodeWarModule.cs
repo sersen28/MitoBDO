@@ -73,7 +73,7 @@ namespace MitoBDO.Module
 
 			var Tier2Menu = new SelectMenuBuilder()
 			{
-				CustomId = CustomID.Tier2Nodes,
+				CustomId = CustomID.Tier2Node,
 				Placeholder = "2단계 거점",
 				MaxValues = 1,
 				MinValues = 1,

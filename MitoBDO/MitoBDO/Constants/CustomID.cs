@@ -17,7 +17,7 @@
 		public const string CallSailBoat = nameof(CallSailBoat);
 		public const string NeedCompass = nameof(NeedCompass);
 		public const string Tier1Node = nameof(Tier1Node);
-		public const string Tier2Nodes = nameof(Tier2Nodes);
+		public const string Tier2Node = nameof(Tier2Node);
 		public const string Tier3Node = nameof(Tier3Node);
 		public const string Tier4Node = nameof(Tier4Node);
 
