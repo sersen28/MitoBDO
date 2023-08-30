@@ -56,7 +56,7 @@ namespace MitoBDO
 			.AddSingleton<StartupService>()
 			.AddSingleton<LoggingService>()
 			.AddSingleton<TimeService>()
-			.AddSingleton<PartyModule>()
+			.AddSingleton<SurveyModule>()
 			.AddSingleton<NodeWarModule>()
 			.AddSingleton<NodeWarService>()
 			.AddSingleton<MarketModule>()

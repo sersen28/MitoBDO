@@ -9,8 +9,11 @@
 		public const string SelectPartyRole = nameof(SelectPartyRole);
 		public const string PartyPermit = nameof(PartyPermit);
 		public const string PartyBlock = nameof(PartyBlock);
-		public const string GeneratePartyMenu = nameof(GeneratePartyMenu);
 		public const string GeneratePartyModal = nameof(GeneratePartyModal);
+
+		public const string NodeWarSurvey = nameof(NodeWarSurvey);
+		public const string GenerateSurvey = nameof(GenerateSurvey);
+		public const string NodeWarSurveyText = nameof(NodeWarSurveyText);
 
 		public const string SailboatPermit = nameof(SailboatPermit);
 		public const string SailboatBlock = nameof(SailboatBlock);

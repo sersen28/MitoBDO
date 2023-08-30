@@ -1,12 +1,21 @@
 ﻿using Discord;
+using Discord.Interactions;
 using Discord.WebSocket;
 using MitoBDO.Constants;
+using MitoBDO.Model;
+using System.ComponentModel;
 using System.Data;
 
 namespace MitoBDO.Services
 {
 	public class GuildService
 	{
+		private readonly DiscordSocketClient discord;
+
+		public GuildService(DiscordSocketClient discord)
+		{
+			this.discord = discord;
+		}
 
 		public async Task AddRole(SocketMessageComponent component, string roleName)
 		{
@@ -98,6 +107,39 @@ namespace MitoBDO.Services
 				text: $"{role.Mention} 파티 모집이 게시되었습니다.",
 				components: component.Build(),
 				embed: embed.Build());
+
+			
+		}
+
+		public async Task GenerateSurvey(SocketMessageComponent component)
+		{
+			var survey = new ModalBuilder();
+			survey.WithTitle($"익명 건의");
+			survey.WithCustomId(CustomID.NodeWarSurvey);
+			survey.AddTextInput("건의 내용", CustomID.NodeWarSurveyText, TextInputStyle.Paragraph, placeholder: "건의 내용을 작성해주세요.");
+
+			await component.RespondWithModalAsync(survey.Build());
+		}
+
+		public async Task SurveyResult(SocketModal modal)
+		{
+			List<SocketMessageComponentData> components = modal.Data.Components.ToList();
+			string text = components.First(x => x.CustomId == CustomID.NodeWarSurveyText).Value;
+			var user = modal.User as SocketGuildUser;
+
+			if (user is null)
+			{
+				await modal.RespondAsync($"오류가 발생했습니다.\n관리자에게 문의해주세요.");
+				await Task.Delay(MitoConst.MessageDeleteWaitMilliseconds);
+				await modal.DeleteOriginalResponseAsync();
+				return;
+			}
+
+			await modal.RespondAsync($"{text}");
+			var logChannel = discord.GetChannel(MitoConst.DeveloperLogChannel) as SocketTextChannel;
+
+			if (logChannel is null) return;
+			await logChannel.SendMessageAsync($"[{user}] ({modal.CreatedAt})\n{text}\n");
 		}
 
 		public async Task JoinParty(SocketMessageComponent component)

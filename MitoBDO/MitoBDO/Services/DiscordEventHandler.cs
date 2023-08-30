@@ -21,7 +21,12 @@ namespace MitoBDO.Services
 
 		public async Task ModalHandler(SocketModal modal)
 		{
-			await guildService.GenerateParty(modal);
+			switch (modal.Data.CustomId)
+			{
+				case CustomID.NodeWarSurvey:
+					await guildService.SurveyResult(modal);
+					break;
+			}
 		}
 
 		public async Task MenuHandler(SocketMessageComponent component)
@@ -37,7 +42,7 @@ namespace MitoBDO.Services
 				case CustomID.PartyBlock:
 					await guildService.RemoveRole(component, roleName);
 					break;
-				case CustomID.GeneratePartyMenu:
+				case CustomID.NodeWarSurvey:
 					await guildService.ShowPartyModal(component);
 					break;
 				case CustomID.Tier1Node:
@@ -85,6 +90,9 @@ namespace MitoBDO.Services
 					break;
 				case CustomID.NeedCompass:
 					await nodeWarService.NeedCompass(component);
+					break;
+				case CustomID.GenerateSurvey:
+					await guildService.GenerateSurvey(component);
 					break;
 			}
 		}
