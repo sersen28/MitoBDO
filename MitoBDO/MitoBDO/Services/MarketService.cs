@@ -254,14 +254,22 @@ namespace MitoBDO.Services
 
 			foreach (var waitItem in waitList)
 			{
-				await context.Channel.SendMessageAsync(embed: BuildWaitItemEmbed(waitItem));
+				var embed = BuildWaitItemEmbed(waitItem);
+				if (embed is not null)
+				{
+					await context.Channel.SendMessageAsync(embed: embed);
+				}
 			}
 		}
-		private Embed BuildWaitItemEmbed(WaitItem waitItem)
+
+		private Embed? BuildWaitItemEmbed(WaitItem waitItem)
 		{
 			var embed = new EmbedBuilder();
 			var item = ItemList.Where(x => x.ItemCode == waitItem.ItemCode).FirstOrDefault();
 			var time = TimeUtil.TimeStampToDateTime(waitItem.TimeStamp);
+
+			if (item is null) return null;
+
 			embed.Color = Color.Blue;
 			embed.Title = $"{item.ItemName} 등록 대기";
 			embed.Description = $"가격: {string.Format("{0:#,0}", waitItem.Price)}\n"

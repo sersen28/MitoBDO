@@ -23,7 +23,7 @@ namespace MitoBDO.Services
 			var request = new RestRequest($"{APIPath}GetWorldMarketWaitList ", Method.Post); 
 			var response = restClient.Execute(request);
 
-			if (response?.Content is null)
+			if (response?.Content is null || response.IsSuccessful is false)
 			{
 				// 응답 없음
 				return null;

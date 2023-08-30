@@ -31,7 +31,15 @@ namespace MitoBDO.Services
 				File.Create(_logFile).Dispose();
 
 			string logText = $"{DateTime.UtcNow.ToString("hh:mm:ss")} [{msg.Severity}] {msg.Source}: {msg.Exception?.ToString() ?? msg.Message}";
-			File.AppendAllText(_logFile, logText + "\n");
+
+			try
+			{
+				File.AppendAllText(_logFile, logText + "\n");
+			}
+			catch (Exception ex)
+			{
+				return Console.Out.WriteLineAsync(ex.Message);
+			}
 
 			return Console.Out.WriteLineAsync(logText);
 		}
