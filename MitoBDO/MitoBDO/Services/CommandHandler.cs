@@ -31,7 +31,7 @@ namespace MitoBDO.Services
 #if DEBUG
 			if ((msg.HasCharPrefix('-', ref argPos) || msg.HasMentionPrefix(_discord.CurrentUser, ref argPos)) && !msg.Author.IsBot)
 #else
-			if ((msg.HasCharPrefix('!', ref argPos) || msg.HasMentionPrefix(_discord.CurrentUser, ref argPos)) && !msg.Author.IsBot)
+			if ((msg.HasCharPrefix('$', ref argPos) || msg.HasMentionPrefix(_discord.CurrentUser, ref argPos)) && !msg.Author.IsBot)
 #endif
 			{
 				var result = await _commands.ExecuteAsync(context, argPos, _provider);
