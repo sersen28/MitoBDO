@@ -47,6 +47,7 @@ namespace MitoBDO.Services
 			this.marketService = marketService;
 
 			InitializeBossTime();
+			InitializeChannelList();
 
 			timer = new Timer();
 			timer.Interval = TimerInterval;
@@ -64,7 +65,11 @@ namespace MitoBDO.Services
 		private void InitializeBossTime()
 		{
 			AnnounceChannelList.Clear();
+#if DEBUG
+			AnnounceChannelList.Add(MitoConst.DeveloperTestChannel, "테스트 n");
+#else
 			AnnounceChannelList.Add(MitoConst.ArcaliveAnnouncChannel, MitoConst.ArcaliveOfficialChannel);
+#endif
 		}
 
 		private void TimeCheck(object? sender, ElapsedEventArgs e)
