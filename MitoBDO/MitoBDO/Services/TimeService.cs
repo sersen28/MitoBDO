@@ -1,8 +1,6 @@
-﻿using Discord;
-using Discord.Commands;
+﻿using Discord.Commands;
 using Discord.WebSocket;
 using MitoBDO.Constants;
-using System.Threading;
 using System.Timers;
 using Timer = System.Timers.Timer;
 
@@ -10,19 +8,45 @@ namespace MitoBDO.Services
 {
 	public class TimeService : ModuleBase
 	{
+		protected class BossTime
+		{
+			public int hour { get; set; }
+			public int minute { get; set; }
+			public DayOfWeek dayOfWeek { get; set; }
+
+			public BossTime(int hour, int minute, DayOfWeek dayOfWeek)
+			{
+				this.hour = hour;
+				this.minute = minute;
+				this.dayOfWeek = dayOfWeek;
+			}
+
+			public bool Compare(DateTime time)
+			{
+				return time.DayOfWeek == this.dayOfWeek
+					&& time.Hour == this.hour
+					&& time.Minute == this.minute;
+			}
+		}
+
 		private readonly DiscordSocketClient discord;
 		private readonly MarketService marketService;
 
-		public static bool GarmothAssembly = true;
-		public static bool VellAssembly = true;
-
 		private Timer timer;
 		private const double TimerInterval = 60000;
+		private List<BossTime> VellTime = new();
+
+		/// <summary>
+		/// key: 공지 채널(디코) , value: 집결 채널(인게임)
+		/// </summary>
+		private Dictionary<ulong, string> AnnounceChannelList = new();
 
 		public TimeService(DiscordSocketClient discord, APIHandler apiHandler, MarketService marketService)
 		{
 			this.discord = discord;
 			this.marketService = marketService;
+
+			InitializeBossTime();
 
 			timer = new Timer();
 			timer.Interval = TimerInterval;
@@ -30,13 +54,20 @@ namespace MitoBDO.Services
 			timer.Start();
 		}
 
-		private void ResetTimeService()
+		private void InitializeChannelList()
 		{
-			GarmothAssembly = true;
-			VellAssembly = true;
+			VellTime.Clear();
+			VellTime.Add(new BossTime(23, 30, DayOfWeek.Wednesday));
+			VellTime.Add(new BossTime(16, 15, DayOfWeek.Sunday));
 		}
 
-		private void TimeCheck(object sender, ElapsedEventArgs e)
+		private void InitializeBossTime()
+		{
+			AnnounceChannelList.Clear();
+			AnnounceChannelList.Add(MitoConst.ArcaliveAnnouncChannel, MitoConst.ArcaliveOfficialChannel);
+		}
+
+		private void TimeCheck(object? sender, ElapsedEventArgs e)
 		{
 			BossTimeCheck();
 			Task.Run(marketService.MarketTimeCheck);
@@ -45,56 +76,31 @@ namespace MitoBDO.Services
 		private void BossTimeCheck()
 		{
 			var now = DateTime.Now;
-			var channel = discord.GetChannel(MitoConst.ArcaliveAnnouncChannel) as SocketTextChannel;
-			if (channel is null) return;
 
-			if (now.Hour is 7 && now.Minute is 0)
+			foreach (var time in VellTime)
 			{
-				ResetTimeService();
-				return;
-			}
-
-			if (now.DayOfWeek is DayOfWeek.Tuesday)
-			{
-				if (now.Hour is 23 & now.Minute is 10) AssembleAnnounce(now, channel, "가모스");
-			}
-			else if (now.DayOfWeek is DayOfWeek.Wednesday)
-			{
-				if (now.Hour is 23 & now.Minute is 30) VellAnnounce(now, channel);
-			}
-			else if (now.DayOfWeek is DayOfWeek.Thursday)
-			{
-				if (now.Hour is 23 & now.Minute is 10) AssembleAnnounce(now, channel, "가모스");
-			}
-			else if (now.DayOfWeek is DayOfWeek.Saturday)
-			{
-				if (now.Hour is 23 & now.Minute is 40) AssembleAnnounce(now, channel, "가모스");
-			}
-			else if (now.DayOfWeek is DayOfWeek.Sunday)
-			{
-				if (now.Hour is 16 & now.Minute is 15) VellAnnounce(now, channel);
+				if (time.Compare(now))
+				{
+					VellAnnounce(now);
+				}
 			}
 		}
 
-		private void AssembleAnnounce(DateTime now, SocketTextChannel channel, string bossName)
+		private void VellAnnounce(DateTime now)
 		{
 			var time = now.AddMinutes(30);
-			var role = channel.Guild.Roles.Where(x => x.Name == bossName).FirstOrDefault();
 
-			var hour = now.AddHours(13);
-			var minute = now.AddMinutes(40);
+			foreach (var iter in AnnounceChannelList)
+			{
+				var channel = discord.GetChannel(iter.Key) as SocketTextChannel;
+				if (channel is null) continue;
 
-			if (role is null) return;
-			channel.SendMessageAsync($"{role.Mention} 잠시 후 {time:HH}시 {time:mm}분\n{MitoConst.ArcaliveOfficialChannel}채널에서 {bossName} 집결입니다.");
-		}
 
-		private void VellAnnounce(DateTime now, SocketTextChannel channel)
-		{
-			var time = now.AddMinutes(30);
-			var role = channel.Guild.Roles.Where(x => x.Name == "벨").FirstOrDefault();
+				var role = channel.Guild.Roles.Where(x => x.Name == "벨").FirstOrDefault();
+				if (role is null) continue;
 
-			if (role is null) return;
-			channel.SendMessageAsync($"{role.Mention} 잠시 후 {time:HH}시 {time:mm}분\n{MitoConst.ArcaliveOfficialChannel}채널에서 벨리아 출항 대기 바랍니다.");
+				channel.SendMessageAsync($"{role.Mention} 잠시 후 {time:HH}시 {time:mm}분\n{iter.Value}채널에서 벨리아 출항 대기 바랍니다.");
+			}
 		}
 	}
 }
